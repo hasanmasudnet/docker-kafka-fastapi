@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Send Message to Kafka via FastAPI</title>
+  </head>
+  <body>
+    <h1>Send Message to Kafka via FastAPI</h1>
+    <input type="text" id="messageInput" placeholder="Enter your message" />
+    <button onclick="sendMessage()">Send</button>
+    <div id="responseMessage"></div>
+    <!-- Placeholder for the response message -->
+
+    <script>
+      function sendMessage() {
+        const messageValue = document.getElementById("messageInput").value;
+        fetch("http://localhost:8080/send-message/", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ message: messageValue }),
+        })
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+          })
+          .then((data) => {
+            console.log(data);
+            document.getElementById("responseMessage").textContent =
+              "Message sent: " + data.data; // Update the placeholder with the response
+          })
+          .catch((error) => {
+            console.error(
+              "There was a problem with the fetch operation:",
+              error
+            );
+            document.getElementById("responseMessage").textContent =
+              "Error: " + error.message; // Display errors if any
+          });
+      }
+    </script>
+  </body>
+</html>
